@@ -2,9 +2,9 @@
 
 ### A small notepad with a small language model inside it.
 
-[![Try it](https://img.shields.io/badge/Live-Try_SmolNotes-111111?style=for-the-badge&labelColor=5B6675)](https://smol-notes.jasonxuyang.com)
-[![Local](https://img.shields.io/badge/Runs-in_your_browser-111111?style=for-the-badge&labelColor=2F6F4E)](#what-is-happening-locally)
-[![License: MIT](https://img.shields.io/badge/License-MIT-111111?style=for-the-badge&labelColor=3D5A80)](LICENSE)
+[![Live](https://img.shields.io/badge/Live-try%20SmolNotes-blue.svg)](https://smol-notes.jasonxuyang.com)
+[![Local](https://img.shields.io/badge/Local--first-runs%20in%20your%20browser-8b5cf6.svg)](#what-is-happening-locally)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 **SmolNotes is an exploration of local writing and generative motion.** Short continuations appear as you type. The model runs entirely in your tab—no account, no API key, nothing leaves the machine. On the other half of the screen, the same generation events set an ASCII field in motion. Not a scientific readout. Just a visual companion to the writing.
 
