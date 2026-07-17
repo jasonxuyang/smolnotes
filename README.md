@@ -1,78 +1,53 @@
 # SmolNotes
 
-Local autocomplete notepad in the browser.
+A small notepad with a small language model inside it.
 
-Write on the left. An interpretive ASCII field on the right. Inference runs entirely in your tab via WebGPU — no server, no API key, nothing leaves the machine.
+SmolNotes offers short continuations as you write. The model runs in your
+browser, so there is no account, API key, or server receiving your notes. The
+project is an exploration of local writing and generative motion: the model's
+suggestions shape the words on one side, while the same generation events set
+an ASCII field in motion on the other. It is not a scientific readout, just a
+visual companion to the writing.
 
-Pause while typing for a ghost suggestion. **Tab** accepts, **Esc** dismisses.
+[Try SmolNotes](https://smol-notes.jasonxuyang.com)
 
-[github.com/jasonxuyang/smol-notes](https://github.com/jasonxuyang/smol-notes)
+![SmolNotes demo](assets/demo.gif)
 
-## Features
+## Writing with it
 
-- Local streaming autocomplete with [WebLLM](https://github.com/mlc-ai/web-llm) / WebGPU
-- Copilot-style ghost text at the caret
-- Live ASCII visualization driven by generation events
-- Last 10 notes cached in `localStorage`
-- Session stats: suggestions offered / accepted / dismissed
-- Auto-loads `SmolLM2-360M` for a light first run
+Start typing and pause briefly at the end of a line. A suggestion will appear
+as ghost text:
 
-## Requirements
+- **Tab** keeps it
+- **Esc** lets it go
+- Continuing to type replaces it with your own words
 
-- Desktop **Chrome** or **Edge** with WebGPU enabled
-- Hardware acceleration on
-- A few hundred MB free for the first model download (then cached)
+Suggestions are deliberately short: usually a word or phrase rather than a
+finished thought. The model is small, local, and sometimes odd. That is part of
+the experiment—it can give you a nudge without trying to take over the page.
 
-## Quick start
+Notes are saved in your browser's `localStorage`, with the 10 most recent
+available from the opening screen. Nothing is synced between devices.
 
-```bash
-pnpm install
-pnpm dev
-```
+## What is happening locally
 
-Open [http://localhost:3000](http://localhost:3000), wait for the boot screen, then type.
+On the first visit, SmolNotes downloads a quantized SmolLM2 360M model and
+caches it in the browser. [WebLLM](https://github.com/mlc-ai/web-llm) runs the
+model with WebGPU inside a Web Worker, keeping inference away from the main UI
+thread.
 
-```bash
-pnpm build   # production build
-pnpm start   # serve production build
-pnpm lint    # eslint
-```
-
-## How it works
+As you type, the editor sends the text before your cursor to the worker. Tokens
+stream back into the ghost-text layer, while generation events feed the ASCII
+animation on the right.
 
 ```text
-React UI                         Web Worker
-─────────────────────            ────────────────────────
-note editor + ghost text         CreateMLCEngine / WebLLM
-autocomplete debounce            download · compile · decode
-localStorage notes                     │
-     │                                 │
-     └──── postMessage ────────────────┘
-           initialize / generate / cancel
-           load-progress / ready / text-delta
+editor + ghost text                    Web Worker
+──────────────────                    ──────────
+note context ─────── postMessage ───▶ WebLLM / WebGPU
+ghost suggestion ◀── token stream ─── SmolLM2 360M
+ASCII field ◀──────── generation events
 ```
 
-| Path | Role |
-| --- | --- |
-| `components/AppShell.tsx` | Boot, notes, inference wiring |
-| `components/NoteEditor.tsx` | Note textarea + ghost overlay |
-| `components/EmptySidePanel.tsx` | Right-pane blurb + recent notes when empty |
-| `lib/autocomplete.ts` | Debounce, pack, short continuation |
-| `lib/note-store.ts` | Note persistence |
-| `lib/ascii-terminal-viz.ts` | Event-driven ASCII field |
-| `lib/model-config.ts` | Model IDs |
-| `workers/llm.worker.ts` | WebLLM engine + text-completion streaming |
-
-The app loads a single model (`MODEL_ID` in `lib/model-config.ts`: SmolLM2 360M).
-
-## Notes
-
-- First visit downloads model weights. Keep the tab open until ready.
-- Viz is interpretive — not attention maps or real activations.
-- Autocomplete only fires at the end of a non-empty line after a short pause.
-- OS `prefers-reduced-motion` is respected by the ASCII field.
-- COOP / COEP headers are set for cross-origin isolation WebLLM may need.
-
-## License
-
-MIT — see [LICENSE](./LICENSE).
+The ASCII field responds to starts, token deltas, completions, and
+cancellations. It is an interpretation of the process, not a visualization of
+attention, activations, or the model's inner reasoning.
