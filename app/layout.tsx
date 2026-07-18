@@ -101,7 +101,7 @@ const jsonLd = {
       author: { "@id": personId },
       creator: { "@id": personId },
       isPartOf: { "@id": `${AUTHOR_URL}/#website` },
-      sameAs: ["https://github.com/jasonxuyang/smol-notes"],
+      sameAs: ["https://github.com/jasonxuyang/smolnotes"],
     },
     {
       "@type": "Person",

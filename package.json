@@ -1,12 +1,12 @@
 {
-  "name": "smol-notes",
+  "name": "smolnotes",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "description": "Local autocomplete notepad in the browser.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jasonxuyang/smol-notes.git"
+    "url": "https://github.com/jasonxuyang/smolnotes.git"
   },
   "scripts": {
     "dev": "next dev",
